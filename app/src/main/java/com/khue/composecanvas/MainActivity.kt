@@ -6,30 +6,26 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Outline
-import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawOutline
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,16 +44,20 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 ) {
                     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                        val x = ((16*150) + 100).pxToDp()
-                        StockChart(
-                            modifier = Modifier
-                                .horizontalScroll(rememberScrollState())
-                                .width(x)
-                                .height(300.dp)
-                                .align(CenterHorizontally),
-                            infos = listOf(249.75f to 4, 250.35f to 5, 249.81f to 6, 249.17f to 7, 250.61f to 8, 253.24f to 9, 252.9f to 10, 252.0f to 11,
-                                250.856f to 12, 246.77f to 13, 250.39f to 14, 250.23f to 15, 250.01f to 16 , 249.97f to 17 , 249.89f to 18, 249.95f to 19),
-                        )
+                        val x = ((16*150)).pxToDp()
+                        val y = rememberScrollState()
+                        Card(shape = MaterialTheme.shapes.large, colors = CardDefaults.elevatedCardColors()) {
+                            Box(Modifier.padding(16.dp), contentAlignment = Alignment.Center) {
+                                StockChart(
+                                    modifier = Modifier
+                                        .horizontalScroll(y)
+                                        .width(x)
+                                        .height(300.dp),
+                                    infos = listOf(249.75f to 4, 250.35f to 5, 249.81f to 6, 249.17f to 7, 250.61f to 8, 253.24f to 9, 252.9f to 10, 252.0f to 11,
+                                        250.856f to 12, 246.77f to 13, 250.39f to 14, 250.23f to 15, 250.01f to 16 , 249.97f to 17 , 249.89f to 18, 249.95f to 19),
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -93,6 +93,10 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         Canvas(modifier = Modifier.fillMaxWidth().aspectRatio(1f)) {
 
             val rect = Rect(Offset.Zero, size)
+            rect.left
+            rect.top
+            rect.right
+            rect.bottom
             val trianglePath = Path().apply {
                 moveTo(rect.topCenter.x, rect.topCenter.y)
                 lineTo(rect.bottomRight.x, rect.bottomRight.y)

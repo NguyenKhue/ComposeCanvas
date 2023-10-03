@@ -1,12 +1,14 @@
 package com.khue.composecanvas
 
-import android.graphics.Paint
+
+import android.graphics.Canvas
 import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -15,7 +17,6 @@ import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -59,7 +60,7 @@ fun StockChart(
                 text = hour.toString(),
                 style = TextStyle(
                     fontSize = 12.sp,
-                    color = Color.White,
+                    color = Color.DarkGray,
                     textAlign = TextAlign.Center
                 ),
             )
@@ -73,7 +74,7 @@ fun StockChart(
                 text = round(lowerValue + priceStep * i).toString(),
                 style = TextStyle(
                     fontSize = 12.sp,
-                    color = Color.White,
+                    color = Color.DarkGray,
                     textAlign = TextAlign.Center
                 ),
             )
@@ -114,23 +115,39 @@ fun StockChart(
                 close()
             }
 
-        drawPath(
-            path = fillPath,
-            brush = Brush.verticalGradient(
-                colors = listOf(
-                    transparentGraphColor,
-                    Color.Transparent
-                ),
-                endY = size.height - spacing
+        drawContext.canvas.nativeCanvas.inClip(
+            left = 0f, top = 0f, right = size.width, bottom = size.height
+        ) {
+            drawPath(
+                path = fillPath,
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        transparentGraphColor,
+                        Color.Transparent
+                    ),
+                    endY = size.height - spacing
+                )
             )
-        )
-        drawPath(
-            path = strokePath,
-            color = graphColor,
-            style = Stroke(
-                width = 3.dp.toPx(),
-                cap = StrokeCap.Round
+            drawPath(
+                path = strokePath,
+                color = graphColor,
+                style = Stroke(
+                    width = 3.dp.toPx(),
+                    cap = StrokeCap.Round
+                )
             )
-        )
+        }
     }
+}
+public inline fun Canvas.inClip(
+    left: Float,
+    top: Float,
+    right: Float,
+    bottom: Float,
+    block: () -> Unit,
+) {
+    val clipRestoreCount = save()
+    clipRect(left, top, right, bottom)
+    block()
+    restoreToCount(clipRestoreCount)
 }
