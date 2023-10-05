@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -31,6 +32,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -51,6 +53,8 @@ android {
 }
 
 dependencies {
+
+    coreLibraryDesugaring(libs.android.desugarJdkLibs)
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
